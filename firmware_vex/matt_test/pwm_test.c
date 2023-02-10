@@ -66,20 +66,17 @@ void main()
 
 	*/
 
-    // 1 input for input signal
+    // 6 input for encoders
 	reg_mprj_io_8 =   GPIO_MODE_USER_STD_INPUT_NOPULL;
-//	reg_mprj_io_8 =   GPIO_MODE_MGMT_STD_OUTPUT;
-
-    // 7 outputs for segments, starting at 9
 	reg_mprj_io_9 =   GPIO_MODE_USER_STD_INPUT_NOPULL;
 	reg_mprj_io_10 =  GPIO_MODE_USER_STD_INPUT_NOPULL;
 	reg_mprj_io_11 =  GPIO_MODE_USER_STD_INPUT_NOPULL;
 	reg_mprj_io_12 =  GPIO_MODE_USER_STD_INPUT_NOPULL;
 	reg_mprj_io_13 =  GPIO_MODE_USER_STD_INPUT_NOPULL;
+
+    // pwm out
 	reg_mprj_io_14 =  GPIO_MODE_USER_STD_OUTPUT;
 	reg_mprj_io_15 =  GPIO_MODE_USER_STD_OUTPUT;
-
-    // digit select
 	reg_mprj_io_16 =  GPIO_MODE_USER_STD_OUTPUT;
 
     gpio_config_io();
@@ -97,19 +94,7 @@ void main()
     reg_la0_data = 0;
 
     // no need for anything else as this design is free running.
-
-    // load the correct clock frequency
-    // la [1] load
-    // la [13:2] new period
-//    reg_la0_data |= (3999 << 2) + (1 << 1);
-//    reg_la0_data = 0x12;
-//    reg_la0_data = 0;
-
     while (1) {
-//        reg_mprj_datal = 0x00000100;
-//        delay(5);
-//        reg_mprj_datal = 0x00000000;
-//        delay(5);
         blink_long();
     }
 

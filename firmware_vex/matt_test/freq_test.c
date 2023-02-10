@@ -67,8 +67,7 @@ void main()
 	*/
 
     // 1 input for input signal
-//	reg_mprj_io_8 =   GPIO_MODE_USER_STD_INPUT_NOPULL;
-	reg_mprj_io_8 =   GPIO_MODE_MGMT_STD_OUTPUT;
+	reg_mprj_io_8 =   GPIO_MODE_USER_STD_INPUT_NOPULL;
 
     // 7 outputs for segments, starting at 9
 	reg_mprj_io_9 =   GPIO_MODE_USER_STD_OUTPUT;
@@ -108,6 +107,7 @@ void main()
 //    reg_la0_data = 0;
 
     while (1) {
+        blink_short();
 //        reg_mprj_datal = 0x00000100;
         blink_long();
         delay(5000);

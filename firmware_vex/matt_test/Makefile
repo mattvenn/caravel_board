@@ -1,5 +1,5 @@
 
-TOOLCHAIN_PATH=/usr/local/bin/
+#TOOLCHAIN_PATH=/usr/local/bin/
 #TOOLCHAIN_PATH=/opt/riscv32imc/bin/
 # TOOLCHAIN_PATH=/ef/apps/bin/
 
@@ -32,7 +32,7 @@ check: gpio_config_def.py gpio_config_io.py gpio_config_data.c
 
 %.hex: %.elf
 	$(TOOLCHAIN_PATH)$(TOOLCHAIN_PREFIX)-unknown-elf-objcopy -O verilog $< $@
-	sed -i '.orig' -e 's/@1000/@0000/g' $@
+	sed -i'.orig' -e 's/@1000/@0000/g' $@
 
 %.bin: %.elf
 	$(TOOLCHAIN_PATH)$(TOOLCHAIN_PREFIX)-unknown-elf-objcopy -O binary $< $@
@@ -45,10 +45,9 @@ flash: freq_test.hex
 	python3 ../util/caravel_hkstop.py
 
 flash_pwm: pwm_test.hex
-	python3 ../util/caravel_hkflash.py pwm_test.hex
-	python3 ../util/caravel_hkstop.py
+	make -f ../nucleo/Makefile flash FILE=pwm_test.hex
 
-flash_nucleo: freq_test.hex
+flash_freq: freq_test.hex
 	make -f ../nucleo/Makefile flash FILE=freq_test.hex
 
 flash_nucleo_pwm: pwm_test.hex
