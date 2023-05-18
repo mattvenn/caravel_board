@@ -3,6 +3,14 @@
 This repo provides firmware examples, flash programming and diagnostic tools for testing
 Open MPW and chipIgnite projects using Caravel.  It also provides schematics, layout and gerber files for PCB evaluation and breakout boards.
 
+## MPW-2 & MPW-3 Project Owners
+
+See the README for the the Nucleo automated test setup here -- https://bit.ly/3KPriWb
+
+## Stanford Projects
+
+See the  README for testing projects here -- https://github.com/efabless/caravel_board/tree/main/stanford#readme
+
 ## Firmware
 
 You will need python 3.6 or later.  
