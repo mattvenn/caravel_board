@@ -4,7 +4,7 @@ Demonstrations of interacting with Caravel. Resources:
 
 * Caravel harness documentation https://caravel-harness.readthedocs.io/en/latest/index.html
 * Caravel SoC documentation https://caravel-mgmt-soc-litex.readthedocs.io/en/latest/ 
-* Demo board files: https://github.com/efabless/caravel_board/tree/main/hardware/development/caravel-dev-v5-M.2
+* Demo PCB files: https://github.com/efabless/caravel_board/tree/main/hardware/development/caravel-dev-v5-M.2
 * GCC Toolchain installation: https://github.com/efabless/caravel_board/main/demos#install-toolchain-for-compiling-code
 
 ## HKDebug demos
@@ -29,7 +29,7 @@ Then type `3` to get the project ID.
 
 ### DLL (PLL) enable / disable from commandline
 
-*Note* The naming is confusing as the DLL is referred to as both DLL and PLL. DLL is more correct, but PLL is still in use for firmware register names.
+*Note: The naming is confusing as the DLL is referred to as both DLL and PLL. DLL is more correct, but PLL is still in use for firmware register names.*
 
 Start caravel_hkdebug.py:
 
@@ -157,7 +157,17 @@ And the red GPIO LED should start flashing on the demo board. If you get an erro
 
 To set the DLL with firmware, we need to write to 4 registers: `pll_source` and `pll_divider` to set the frequency, then enable it with `pll_ena` and finally switch the core from the external oscillator to the DLL with `pll_bypass`.
 
-    reg_hkspi_pll_source  = 0x3f;   // default 0x12
+    reg_hkspi_pll_source  = 0x1b;   // default 0x12
     reg_hkspi_pll_divider = 0x09;   // default 0x04
     reg_hkspi_pll_ena     = 1;      // default 0x00 
     reg_hkspi_pll_bypass  = 0;      // default 0x01
+    reg_clk_out_dest      = 2;      // monitor the user clock on GPIO[15]
+
+Edit the [demos.c](demos.c) file and enable the DLL by uncommenting `#define DLL_DEMO` at the top of the file.
+
+Make sure the DLL is [currently not activated](#dll-pll-enable--disable-from-commandline) and then flash the firmware.
+
+    make flash
+
+After the firmware has flashed, you should see the LED blinking faster. The user clock should also be output on GPIO15 if you want to measure it.
+With the values given, it should be 30MHz.
