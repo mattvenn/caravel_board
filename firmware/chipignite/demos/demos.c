@@ -2,10 +2,10 @@
 #include <stub.h>
 #include <uart.h>
 
+#define GPIO_DEMO
 //#define DLL_DEMO
-//#define GPIO_DEMO
-#define WB_LA_DEMO
 //#define SERIAL_DEMO
+//#define WB_LA_DEMO
 
 // --------------------------------------------------------
 // Firmware routines
@@ -128,6 +128,9 @@ void blink()
     delay(800000);
 }
 
+/* 
+This section only applies to the WB demo using a specific chip. If you don't have the chip, the demo won't work
+*/
 #define SRAM_BASE_ADDR              0x300FFC00
 #define OPENRAM(addr)               (*(volatile uint32_t*)(SRAM_BASE_ADDR + (addr & 0x3fc)))
 #define SRAM_WRITE_PORT             31  // last bit of the 1st bank logic analyser. If set to 0, Caravel can write to shared RAM
@@ -172,17 +175,17 @@ void main()
 	reg_la2_oenb = reg_la2_iena = 0x00000000;    // [95:64]
 	reg_la3_oenb = reg_la3_iena = 0x00000000;    // [127:96]
 
-    // write data to la output
+    // write data to LA output
     reg_la0_data = 0x00;
     reg_la1_data = 0x00;
     reg_la2_data = 0x00;
     reg_la3_data = 0x00;
 
-    // read data from la input
-    data0 = reg_la0_data;
-    data1 = reg_la1_data;
-    data2 = reg_la2_data;
-    data3 = reg_la3_data;
+    // read data from LA input
+    data0 = reg_la0_data_in;
+    data1 = reg_la1_data_in;
+    data2 = reg_la2_data_in;
+    data3 = reg_la3_data_in;
     #endif
 
 

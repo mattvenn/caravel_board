@@ -153,6 +153,25 @@ And the red GPIO LED should start flashing on the demo board. If you get an erro
 * Check the M2 breakout board is properly inserted into the board.
 * If you get stuck then ask for help in the `#mpw-6plus-silicon` channel of the slack.
 
+### GPIO demo
+
+The demo you just flashed sets up the GPIOs to be 'management controlled'. This means the RISCV coprocessor controls the IOs, not the user design.
+
+GPIOs must be setup before use - see the `configure_io` function. After setting all the values, you must update the GPIOs with this code:
+
+    reg_mprj_xfer = 1;
+    while (reg_mprj_xfer == 1);
+
+As there are 37 GPIOs, there are 2 sets of 32bit registers you can use to read and write them:
+
+    # write to all bits
+    reg_mprj_datal = 0x00000000;
+    reg_mprj_datah = 0x00000000;
+
+    # read from all bits
+    data0 = reg_mrpj_datal;
+    data1 = reg_mrpj_datah;
+
 ### Set the DLL in firmware
 
 To set the DLL with firmware, we need to write to 4 registers: `pll_source` and `pll_divider` to set the frequency, then enable it with `pll_ena` and finally switch the core from the external oscillator to the DLL with `pll_bypass`.
@@ -198,9 +217,10 @@ You may need to edit the Makefile to change the serial port used. Press any key 
 If you don't see anything then check J2 is correctly placed and your serial port is the right one. 
 If you see bad characters, then the DLL is probably activated and you need to disable it.
 
+
 ### Wishbone and Logic Analyser
 
-Unfortunately it's not possible to make an easy demo for Wishbone (WB) or Logic Analyser (LA) because they depend on the user project on the chip.
+Unfortunately it's not possible to make a universal demo for Wishbone (WB) or Logic Analyser (LA) because they depend on the user project on the chip.
 
 This demo uses a [shared SRAM](https://docs.google.com/document/d/1wLjU6hkAoYvSWNBAyTj8HmIV70eJWU3apa9_OEpsd3Y/edit#heading=h.d6kk3xet6rfq) taped out on 
 the [Zero to ASIC course's group submission to MPW6](https://zerotoasiccourse.com/post/mpw6_submitted/).
@@ -236,3 +256,16 @@ The result should be the following:
     000e
     000f
 
+### Wishbone notes
+
+* You must enable WB with `reg_wb_enable  = 1;`. 
+* You can read and write to memory addresses above 0x3000_0000.
+
+### Logic Analyser notes
+
+The 128 bit wide LA has 4 banks, each with 4 sets of 32 bit registers to control it.
+
+* `reg_la0_oenb`, set low to enable the output
+* `reg_la0_iena`, set high to enable the input
+* `reg_la0_data`, write to this register to put data on the LA
+* `reg_la0_data_in`, read from this register to fetch data from the LA
