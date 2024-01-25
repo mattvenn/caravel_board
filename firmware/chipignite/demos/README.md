@@ -196,7 +196,7 @@ With the values given, it should be 30MHz.
 Caravel has a serial uart, connected to the FTDI chip. However, the FTDI is used to program the HKSPI, so it can't be used to read and write serial to Caravel without putting a jumper on J2.
 This will then prevent flashing new firmware. So either remove the jumper to flash, then replace it, or use another USB to serial adapter on pins 5 & 6.
 
-To try this demo, first uncomment `#ifdef SERIAL_DEMO` and comment all the other demo defines. Flash the firmware as usual, then place a jumper on J2.
+To try this demo, first uncomment `#ifdef SERIAL_DEMO` and comment *all the other* demo defines. Flash the firmware as usual, then place a jumper on J2.
 
 Now start `miniterm.py` by running 
 
