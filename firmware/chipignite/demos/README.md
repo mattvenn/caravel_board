@@ -171,3 +171,68 @@ Make sure the DLL is [currently not activated](#dll-pll-enable--disable-from-com
 
 After the firmware has flashed, you should see the LED blinking faster. The user clock should also be output on GPIO15 if you want to measure it.
 With the values given, it should be 30MHz.
+
+### Serial communication
+
+Caravel has a serial uart, connected to the FTDI chip. However, the FTDI is used to program the HKSPI, so it can't be used to read and write serial to Caravel without putting a jumper on J2.
+This will then prevent flashing new firmware. So either remove the jumper to flash, then replace it, or use another USB to serial adapter on pins 5 & 6.
+
+To try this demo, first uncomment `#ifdef SERIAL_DEMO` and comment all the other demo defines. Flash the firmware as usual, then place a jumper on J2.
+
+Now start `miniterm.py` by running 
+
+    make monitor
+
+You may need to edit the Makefile to change the serial port used. Press any key to get the menu:
+
+    --- Miniterm on /dev/serial/by-id/usb-FTDI_Single_RS232-HS-if00-port0  9600,8,N,1 ---
+    --- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H ---
+    a: hello
+    b: count
+    c: blink
+
+* Pressing `a` should print back `Hello World !!`.
+* Pressing `b` should increment a counter and print the result. 
+* Pressing `c` should blink all the GPIOs once.
+
+If you don't see anything then check J2 is correctly placed and your serial port is the right one. 
+If you see bad characters, then the DLL is probably activated and you need to disable it.
+
+### Wishbone and Logic Analyser
+
+Unfortunately it's not possible to make an easy demo for Wishbone (WB) or Logic Analyser (LA) because they depend on the user project on the chip.
+
+This demo uses a [shared SRAM](https://docs.google.com/document/d/1wLjU6hkAoYvSWNBAyTj8HmIV70eJWU3apa9_OEpsd3Y/edit#heading=h.d6kk3xet6rfq) taped out on 
+the [Zero to ASIC course's group submission to MPW6](https://zerotoasiccourse.com/post/mpw6_submitted/).
+
+The LA is used to enable and configure the SRAM, and then WB is used to write and then read the SRAM.
+
+The serial port is also used to print the memory contents. If you have this chip then you can try the demo by:
+
+* uncomment the `#ifdef WB_LA_DEMO`
+* flash the firmware
+* place J2 for serial
+* start the serial monitor
+* reset Caravel
+
+The result should be the following:
+
+    --- Miniterm on /dev/serial/by-id/usb-FTDI_Single_RS232-HS-if00-port0  9600,8,N,1 ---
+    --- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H ---
+    0000
+    0001
+    0002
+    0003
+    0004
+    0005
+    0006
+    0007
+    0008
+    0009
+    000a
+    000b
+    000c
+    000d
+    000e
+    000f
+
