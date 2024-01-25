@@ -1,8 +1,17 @@
 # Caravel Demos
 
-## Read the project ID from the commandline
+Demonstrations of interacting with Caravel. Resources:
 
-caravel_hkdebug.py is a tool that can interact with Caravel via the housekeeping spi (HKSPI).
+* Caravel harness documentation https://caravel-harness.readthedocs.io/en/latest/index.html
+* Caravel SoC documentation https://caravel-mgmt-soc-litex.readthedocs.io/en/latest/ 
+* Demo board files: https://github.com/efabless/caravel_board/tree/demos/hardware/development/caravel-dev-v5-M.2o
+* GCC Toolchain installation: https://github.com/efabless/caravel_board/tree/demos#install-toolchain-for-compiling-code
+
+## HKDebug demos
+
+### Read the project ID from the commandline
+
+caravel_hkdebug.py is a tool that can interact with Caravel via the [housekeeping spi (HKSPI)](https://caravel-harness.readthedocs.io/en/latest/housekeeping-spi.html#housekeeping-spi-registers).
 
 Start caravel_hkdebug.py:
 
@@ -10,7 +19,7 @@ Start caravel_hkdebug.py:
 
 Then type `2` to get the project ID.
 
-## Reboot Caravel from the commandline
+### Reboot Caravel from the commandline
 
 Start caravel_hkdebug.py:
 
@@ -18,7 +27,9 @@ Start caravel_hkdebug.py:
 
 Then type `3` to get the project ID.
 
-## DLL (PLL) enable / disable from commandline
+### DLL (PLL) enable / disable from commandline
+
+*Note* The naming is confusing as the DLL is referred to as both DLL and PLL. DLL is more correct, but PLL is still in use for firmware register names.
 
 Start caravel_hkdebug.py:
 
@@ -27,7 +38,7 @@ Start caravel_hkdebug.py:
 Then type `8` to enable the DLL. The LED should start flashing 4 times faster.
 Type `10` to disable the DLL.
 
-## Change DLL frequency from the commandline
+### Change DLL frequency from the commandline
 
 This [calculator](https://github.com/kbeckmann/caravel-pll-calculator) makes it easy to list DLL frequencies and get the
 required register values.
@@ -48,7 +59,9 @@ This results in register `0x11: 0x1b` and register `0x12: 0x09`. To set these on
 Then type `14` to set a register, choose register `0x11` and give `0x1b`. Then repeat for register `0x12` with value `0x09`.
 Finally enable the DLL by typing `8`.
 
-## Flash the firmware
+## Firmware demos
+
+### Flash the firmware
 
 Check the top lines of the [Makefile](Makefile). If your RISCV compiler is installed in a different location you will need
 to either edit the Makefile to update the `TOOLCHAIN_PATH` or set it on the commandline each time you start a new session:
@@ -139,3 +152,12 @@ And the red GPIO LED should start flashing on the demo board. If you get an erro
 * Check you have permissions. The serial device will often be owned by `plugdev` or `dialout`. You can try these [instructions](https://askubuntu.com/questions/112568/how-do-i-allow-a-non-default-user-to-use-serial-device-ttyusb0) to fix it.
 * Check the M2 breakout board is properly inserted into the board.
 * If you get stuck then ask for help in the `#mpw-6plus-silicon` channel of the slack.
+
+### Set the DLL in firmware
+
+To set the DLL with firmware, we need to write to 4 registers: `pll_source` and `pll_divider` to set the frequency, then enable it with `pll_ena` and finally switch the core from the external oscillator to the DLL with `pll_bypass`.
+
+    reg_hkspi_pll_source  = 0x3f;   // default 0x12
+    reg_hkspi_pll_divider = 0x09;   // default 0x04
+    reg_hkspi_pll_ena     = 1;      // default 0x00 
+    reg_hkspi_pll_bypass  = 0;      // default 0x01
