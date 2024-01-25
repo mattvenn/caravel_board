@@ -4,8 +4,8 @@ Demonstrations of interacting with Caravel. Resources:
 
 * Caravel harness documentation https://caravel-harness.readthedocs.io/en/latest/index.html
 * Caravel SoC documentation https://caravel-mgmt-soc-litex.readthedocs.io/en/latest/ 
-* Demo board files: https://github.com/efabless/caravel_board/tree/demos/hardware/development/caravel-dev-v5-M.2o
-* GCC Toolchain installation: https://github.com/efabless/caravel_board/tree/demos#install-toolchain-for-compiling-code
+* Demo board files: https://github.com/efabless/caravel_board/tree/main/hardware/development/caravel-dev-v5-M.2
+* GCC Toolchain installation: https://github.com/efabless/caravel_board/main/demos#install-toolchain-for-compiling-code
 
 ## HKDebug demos
 
