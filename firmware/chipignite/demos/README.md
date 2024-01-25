@@ -29,7 +29,9 @@ Type `10` to disable the DLL.
 
 ## Change DLL frequency from the commandline
 
-You can use this [calculator](https://github.com/kbeckmann/caravel-pll-calculator) to try a new DLL frequency.
+This [calculator](https://github.com/kbeckmann/caravel-pll-calculator) makes it easy to list DLL frequencies and get the
+required register values.
+
 The onboard oscillator is 10MHz, and the maximum internal frequency supported by the DLL is around 100MHz.
 After cloning the calculator you can run it like this:
 
@@ -46,3 +48,94 @@ This results in register `0x11: 0x1b` and register `0x12: 0x09`. To set these on
 Then type `14` to set a register, choose register `0x11` and give `0x1b`. Then repeat for register `0x12` with value `0x09`.
 Finally enable the DLL by typing `8`.
 
+## Flash the firmware
+
+Check the top lines of the [Makefile](Makefile). If your RISCV compiler is installed in a different location you will need
+to either edit the Makefile to update the `TOOLCHAIN_PATH` or set it on the commandline each time you start a new session:
+
+    export TOOLCHAIN_PATH=/opt/bin/your/path
+
+Then you should be able to compile the firmware with:
+
+    make
+
+If it works, you will get a firmware hex file called `demos.hex` in your directory. If not, check the errors and make sure your 
+paths and environment variables are correct. If you get stuck try the `#mpw-6plus-silicon` channel in the [open source silicon slack](https://join.slack.com/t/open-source-silicon/shared_invite/zt-1s2swn9it-F_qblosmmeHmyY~BtG6BfA).
+
+To flash it, type:
+
+    make flash
+    
+That should result in a log like this:
+
+    python3 ../util/caravel_hkflash.py demos.hex                  
+    Success: Found one matching FTDI device at ftdi://ftdi:232h:1:67/1                                                                       
+                                                                  
+    Caravel data:                                                 
+       mfg        = 0456                                          
+       product    = 11                                            
+       project ID = 2206ff36                                      
+                                                                  
+    Resetting Flash...                                            
+    status = 0x00                                                 
+                                                                  
+    JEDEC = b'ef4016'                                             
+    Erasing chip...                                               
+    done                                                          
+    status = 0x0                                                  
+    setting address to 0x0                                        
+    addr 0x0: flash page write successful                         
+    addr 0x100: flash page write successful                       
+    addr 0x200: flash page write successful                       
+    addr 0x300: flash page write successful                             
+    addr 0x400: flash page write successful                       
+    addr 0x500: flash page write successful                       
+    addr 0x600: flash page write successful                       
+    addr 0x700: flash page write successful                       
+    addr 0x800: flash page write successful                       
+    addr 0x900: flash page write successful                       
+    addr 0xa00: flash page write successful                       
+    addr 0xb00: flash page write successful                       
+    addr 0xc00: flash page write successful                       
+    addr 0xd00: flash page write successful                       
+    addr 0xe00: flash page write successful                       
+    setting address to 0xf00                                      
+    addr 0xf00: flash page write successful                       
+                                                                  
+    total_bytes = 4096                                            
+    status reg_1 = 0x0                                            
+    status reg_2 = 0x2                                            
+    ************************************                          
+    verifying...                                                  
+    ************************************                          
+    status reg_1 = 0x0                                            
+    status reg_2 = 0x2                                            
+    setting address to 0x0                                        
+    addr 0x0: read compare successful                             
+    addr 0x100: read compare successful                           
+    addr 0x200: read compare successful                                 
+    addr 0x300: read compare successful                                 
+    addr 0x400: read compare successful                                 
+    addr 0x500: read compare successful                                 
+    addr 0x600: read compare successful                                 
+    addr 0x700: read compare successful                                 
+    addr 0x800: read compare successful                                 
+    addr 0x900: read compare successful                                 
+    addr 0xa00: read compare successful                                 
+    addr 0xb00: read compare successful                                 
+    addr 0xc00: read compare successful                                 
+    addr 0xd00: read compare successful                                 
+    addr 0xe00: read compare successful                                 
+    setting address to 0xf00                                            
+    addr 0xf00: read compare successful                                 
+
+    total_bytes = 4096                                                  
+    pll_trim = b'6c'                               
+
+And the red GPIO LED should start flashing on the demo board. If you get an error then:
+
+* Check the board is connected properly
+* List the FTDI devices with `lsftdi`, it should show as `Manufacturer: FTDI, Description: FT232R USB UART`
+* Check you have permissions. The serial device will often be owned by `plugdev` or `dialout`. You can try these [instructions](https://askubuntu.com/questions/112568/how-do-i-allow-a-non-default-user-to-use-serial-device-ttyusb0) to fix it.
+* Check the M2 breakout board is properly inserted into the board.
+* If you get stuck then ask for help in the `#mpw-6plus-silicon` channel of the slack.
