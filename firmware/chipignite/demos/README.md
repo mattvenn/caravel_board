@@ -266,6 +266,6 @@ The result should be the following:
 The 128 bit wide LA has 4 banks, each with 4 sets of 32 bit registers to control it.
 
 * `reg_la0_oenb`, set low to enable the output
-* `reg_la0_iena`, set high to enable the input
+* `reg_la0_iena`, set low to enable the input
 * `reg_la0_data`, write to this register to put data on the LA
 * `reg_la0_data_in`, read from this register to fetch data from the LA

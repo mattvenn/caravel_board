@@ -161,7 +161,7 @@ void main()
     reg_hkspi_pll_divider = 0x09;   // default 0x04
     reg_hkspi_pll_ena     = 1;      // default 0x00 
     reg_hkspi_pll_bypass  = 0;      // default 0x01
-    reg_clk_out_dest      = 2;      // monitor the user clock on GPIO[15]
+    reg_clk_out_dest      = 6;      // monitor the user clock on GPIO[14] & GPIO[15]
     #else
     reg_clk_out_dest      = 0;      // don't monitor the user clock
     reg_hkspi_pll_ena     = 0;      // default 0x00 
@@ -169,11 +169,17 @@ void main()
     #endif
 
 	#ifdef LA_DEMO
-    // Configure All LA probes as inputs to the cpu
-	reg_la0_oenb = reg_la0_iena = 0x00000000;    // [31:0]
-	reg_la1_oenb = reg_la1_iena = 0x00000000;    // [63:32]
-	reg_la2_oenb = reg_la2_iena = 0x00000000;    // [95:64]
-	reg_la3_oenb = reg_la3_iena = 0x00000000;    // [127:96]
+    // enable all 32 bits of each LA output bus
+	reg_la0_oenb = 0x0;
+	reg_la1_oenb = 0x0;
+	reg_la2_oenb = 0x0;
+	reg_la3_oenb = 0x0;
+
+    // enable all 32 bits of each LA input 
+	reg_la0_iena = 0x0;
+	reg_la1_iena = 0x0;
+	reg_la2_iena = 0x0;
+	reg_la3_iena = 0x0;
 
     // write data to LA output
     reg_la0_data = 0x00;
@@ -196,7 +202,7 @@ void main()
     #endif
 
     #ifdef WB_LA_DEMO
-    reg_la0_iena = 0;       // LA input enable off
+    reg_la0_iena = 0;       // LA input enable on
     reg_la0_oenb = 0;       // LA output enable on
     reg_la0_data &= ~(1 << SRAM_WRITE_PORT);  // enable the SRAM write port with logic analyser
 
