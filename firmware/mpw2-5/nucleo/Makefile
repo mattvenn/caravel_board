@@ -1,11 +1,11 @@
-#export PATH=$PATH:/bin:/usr/local/bin/:../../venv/bin:/usr/bin/:.
+export PATH=$PATH:/bin:/usr/local/bin/:../../venv/bin:/usr/bin/:.
 
 # --- automatically set ---
 #DEV=/dev/cu.usbmodem33203
 #DEV=/dev/ttyACM0
 
 #FLASH=/media/efabless/PYBFLASH/
-FLASH?=/media/matt/PYBFLASH/
+FLASH?=//Volumes/PYBFLASH/
 DEV=$(shell mpremote connect list | grep STLink | cut -f 1 -d ' ')
 #COPY_CMD=rshell --port ${DEV} cp
 COPY_CMD=cp
@@ -84,12 +84,12 @@ repl:
 
 # flash micropython firmware image.  this firmware image has been rebuilt to add pins for the Caravel Nucleo Hat
 F746ZG: compile
-	st-flash --reset --format ihex write F746ZG_firmware.hex
+	st-flash --connect-under-reset --format ihex write F746ZG_firmware.hex
 	sleep 5
 	make F746ZG-copy
 
 F413ZH:
-	st-flash --reset --format ihex write F413ZH_firmware.hex
+	st-flash --connect-under-reset --format ihex write F413ZH_firmware.hex
 	sleep 7
 	make F413ZH-copy
 
